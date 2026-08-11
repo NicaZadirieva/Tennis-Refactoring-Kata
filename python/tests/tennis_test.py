@@ -1,5 +1,6 @@
 import pytest
 
+from player import Player
 from tennis1 import TennisGame1
 from tennis2 import TennisGame2
 from tennis3 import TennisGame3
@@ -7,13 +8,12 @@ from tennis4 import TennisGame4
 from tennis5 import TennisGame5
 from tennis6 import TennisGame6
 from tennis7 import TennisGame7
-from tennis_unittest import play_game, test_cases
+from tennis_unittest import play_game, play_game1, test_cases
 
 
 @pytest.mark.parametrize(
     "TennisGameClass",
     [
-        TennisGame1,
         TennisGame2,
         TennisGame3,
         TennisGame4,
@@ -37,3 +37,13 @@ def test_get_score_most_games(
 def test_get_score_game7(p1_points, p2_points, score, p1_name, p2_name):
     game = play_game(TennisGame7, p1_points, p2_points, p1_name, p2_name)
     assert "Current score: " + score + ", enjoy your game!" == game.score()
+
+
+@pytest.mark.parametrize(
+    "p1_points p2_points score p1_name p2_name".split(), test_cases
+)
+def test_get_score_game1(p1_points, p2_points, score, p1_name, p2_name):
+    player1 = Player(p1_name, p1_points)
+    player2 = Player(p2_name, p2_points)
+    game = play_game1(TennisGame1, player1, player2)
+    assert score == game.score()

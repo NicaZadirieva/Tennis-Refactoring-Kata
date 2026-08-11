@@ -1,5 +1,6 @@
 import unittest
 
+from player import Player
 from tennis1 import TennisGame1
 from tennis2 import TennisGame2
 from tennis3 import TennisGame3
@@ -55,10 +56,34 @@ def play_game(TennisGame, p1_points, p2_points, p1_name, p2_name):
     return game
 
 
+def play_game1(TennisGame1, player1, player2):
+    game = TennisGame1(player1, player2)
+    old_point1 = game.player1.points
+    old_point2 = game.player2.points
+    new_point1 = 0
+    new_point2 = 0
+    for i in range(max(old_point1, old_point2)):
+        if i < old_point1:
+            new_point1 += 1
+        if i < old_point2:
+            new_point2 += 1
+    game.player1.points = new_point1
+    game.player2.points = new_point2
+    return game
+
+
 class TestTennis(unittest.TestCase):
-    def test_score_games_1_thru_6(self):
+    def test_score_game1(self):
+        for testcase in test_cases:
+            (p1_points, p2_points, score, p1_name, p2_name) = testcase
+            player1 = Player(p1_name, p1_points)
+            player2 = Player(p2_name, p2_points)
+            game = play_game1(TennisGame1, player1, player2)
+            with self.subTest(f"{TennisGame1.__name__} - {testcase}"):
+                self.assertEqual(score, game.score())
+
+    def test_score_games_2_thru_6(self):
         for TennisGameClass in (
-            TennisGame1,
             TennisGame2,
             TennisGame3,
             TennisGame4,
