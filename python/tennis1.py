@@ -6,36 +6,46 @@ class TennisGame1:
         self.player1 = player1
         self.player2 = player2
 
+    def create_deuce_phrase(self, player: Player):
+        return {
+            0: "Love-All",
+            1: "Fifteen-All",
+            2: "Thirty-All",
+        }.get(player.points, "Deuce")
+
+    def create_advantage_phrase(self, player1: Player, player2: Player):
+        expression = player1.points - player2.points
+        return {1: "Advantage player1", -1: "Advantage player2"}.get(expression)
+
+    def create_won_phrase(self, player1: Player, player2: Player):
+        expression = player1.points - player2.points
+        if expression >= 2:
+            return "Win for player1"
+        else:
+            return "Win for player2"
+
+    def additional_phrase_for(self, player: Player):
+        additional_phrase_dict = {
+            0: "Love",
+            1: "Fifteen",
+            2: "Thirty",
+            3: "Forty",
+        }
+        return additional_phrase_dict.get(player.points, "")
+
     def score(self):
         result = ""
-        temp_score = 0
         if self.player1.points == self.player2.points:
-            result = {
-                0: "Love-All",
-                1: "Fifteen-All",
-                2: "Thirty-All",
-            }.get(self.player1.points, "Deuce")
+            result = self.create_deuce_phrase(self.player1)
         elif self.player1.points >= 4 or self.player2.points >= 4:
-            minus_result = self.player1.points - self.player2.points
-            if minus_result == 1:
-                result = "Advantage player1"
-            elif minus_result == -1:
-                result = "Advantage player2"
-            elif minus_result >= 2:
-                result = "Win for player1"
+            advantage_phrase = self.create_advantage_phrase(self.player1, self.player2)
+            if advantage_phrase is None:
+                won_phrase = self.create_won_phrase(self.player1, self.player2)
+                result = won_phrase
             else:
-                result = "Win for player2"
+                result = advantage_phrase
         else:
-            for i in range(1, 3):
-                if i == 1:
-                    temp_score = self.player1.points
-                else:
-                    result += "-"
-                    temp_score = self.player2.points
-                result += {
-                    0: "Love",
-                    1: "Fifteen",
-                    2: "Thirty",
-                    3: "Forty",
-                }[temp_score]
+            result += self.additional_phrase_for(self.player1)
+            result += "-"
+            result += self.additional_phrase_for(self.player2)
         return result
