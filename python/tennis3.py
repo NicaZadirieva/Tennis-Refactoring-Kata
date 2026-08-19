@@ -1,27 +1,44 @@
-class TennisGame3:
-    def __init__(self, player1_name, player2_name):
-        self.p1_n = player1_name
-        self.p2_n = player2_name
-        self.p1 = 0
-        self.p2 = 0
+from player import Player
 
-    def won_point(self, n):
-        if n == "player1":
-            self.p1 += 1
-        else:
-            self.p2 += 1
+
+class TennisGame3:
+    def __init__(self, player1: Player, player2: Player):
+        self.player1 = player1
+        self.player2 = player2
+
+    def __generate_won_player_name__(self):
+        return (
+            self.player1.name
+            if self.player1.points > self.player2.points
+            else self.player2.name
+        )
+
+    def __is_advantage_gamer__(self):
+        return (
+            (self.player1.points - self.player2.points)
+            * (self.player1.points - self.player2.points)
+        ) == 1
 
     def score(self):
-        if (self.p1 < 4 and self.p2 < 4) and (self.p1 + self.p2 < 6):
+        if (
+            self.player1.points == self.player2.points
+            and self.player1.points != 3
+            and self.player1.points < 4
+        ):
+            return {
+                0: "Love-All",
+                1: "Fifteen-All",
+                2: "Thirty-All",
+                3: "Forty-All",
+            }.get(self.player1.points)
+        elif self.player1.points == self.player2.points:
+            return "Deuce"
+        elif (self.player1.points < 4 and self.player2.points < 4) and (
+            self.player1.points != self.player2.points
+        ):
             p = ["Love", "Fifteen", "Thirty", "Forty"]
-            s = p[self.p1]
-            return s + "-All" if (self.p1 == self.p2) else s + "-" + p[self.p2]
+            return p[self.player1.points] + "-" + p[self.player2.points]
+        elif self.__is_advantage_gamer__():
+            return "Advantage " + self.__generate_won_player_name__()
         else:
-            if self.p1 == self.p2:
-                return "Deuce"
-            s = self.p1_n if self.p1 > self.p2 else self.p2_n
-            return (
-                "Advantage " + s
-                if ((self.p1 - self.p2) * (self.p1 - self.p2) == 1)
-                else "Win for " + s
-            )
+            return "Win for " + self.__generate_won_player_name__()
