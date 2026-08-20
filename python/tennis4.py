@@ -10,32 +10,29 @@ class TennisGame4:
 
     def score(self):
         if Deuce.is_deuce(self.server, self.receiver):
-            return TennisResult("Deuce", "").format()
+            return TennisResultFormatter.format("Deuce", "")
         if GameServer.server_has_won(self.server, self.receiver):
-            return TennisResult("Win for " + self.server.name, "").format()
+            return TennisResultFormatter.format("Win for " + self.server.name, "")
         if GameReceiver.receiver_has_won(self.server, self.receiver):
-            return TennisResult("Win for " + self.receiver.name, "").format()
+            return TennisResultFormatter.format("Win for " + self.receiver.name, "")
         if AdvantageServer.server_has_advantage(self.server, self.receiver):
-            return TennisResult("Advantage " + self.server.name, "").format()
+            return TennisResultFormatter.format("Advantage " + self.server.name, "")
         if AdvantageReceiver.receiver_has_advantage(self.server, self.receiver):
-            return TennisResult("Advantage " + self.receiver.name, "").format()
+            return TennisResultFormatter.format("Advantage " + self.receiver.name, "")
 
-        return TennisResult(
+        return TennisResultFormatter.format(
             self.SCORES[self.server.points], self.SCORES[self.receiver.points]
-        ).format()
+        )
 
 
-class TennisResult:
-    def __init__(self, server_score, receiver_score):
-        self.server_score = server_score
-        self.receiver_score = receiver_score
-
-    def format(self):
-        if "" == self.receiver_score:
-            return self.server_score
-        if self.server_score == self.receiver_score:
-            return self.server_score + "-All"
-        return self.server_score + "-" + self.receiver_score
+class TennisResultFormatter:
+    @staticmethod
+    def format(server_result: str, receiver_result: str):
+        if receiver_result == "":
+            return server_result
+        if server_result == receiver_result:
+            return server_result + "-All"
+        return server_result + "-" + receiver_result
 
 
 class Deuce:
