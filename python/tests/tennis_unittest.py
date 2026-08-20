@@ -72,6 +72,22 @@ def play_game1(TennisGame1, player1, player2):
     return game
 
 
+def play_game4(TennisGame4, player1, player2):
+    game = TennisGame4(player1, player2)
+    old_point1 = game.server.points
+    old_point2 = game.receiver.points
+    new_point1 = 0
+    new_point2 = 0
+    for i in range(max(old_point1, old_point2)):
+        if i < old_point1:
+            new_point1 += 1
+        if i < old_point2:
+            new_point2 += 1
+    game.server.points = new_point1
+    game.receiver.points = new_point2
+    return game
+
+
 class TestTennis(unittest.TestCase):
     def test_score_game1(self):
         for testcase in test_cases:
@@ -100,9 +116,17 @@ class TestTennis(unittest.TestCase):
             with self.subTest(f"{TennisGame3.__name__} - {testcase}"):
                 self.assertEqual(score, game.score())
 
+    def test_score_game4(self):
+        for testcase in test_cases:
+            (p1_points, p2_points, score, p1_name, p2_name) = testcase
+            player1 = Player(p1_name, p1_points)
+            player2 = Player(p2_name, p2_points)
+            game = play_game1(TennisGame4, player1, player2)
+            with self.subTest(f"{TennisGame4.__name__} - {testcase}"):
+                self.assertEqual(score, game.score())
+
     def test_score_games_4_thru_6(self):
         for TennisGameClass in (
-            TennisGame4,
             TennisGame5,
             TennisGame6,
         ):
