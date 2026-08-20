@@ -39,27 +39,25 @@ class TennisGame4:
 class GameState:
     @staticmethod
     def status(server: Player, receiver: Player) -> GameStatus:
-        # Сначала проверяем, не закончился ли гейм
-        if server.points >= 4 and (server.points - receiver.points) >= 2:
+        s, r = server.points, receiver.points
+        diff = s - r
+
+        # Победа
+        if s >= 4 and diff >= 2:
             return GameStatus.SERVER_WIN
-        if receiver.points >= 4 and (receiver.points - server.points) >= 2:
+        if r >= 4 and diff <= -2:
             return GameStatus.RECEIVER_WIN
 
-        # Теперь проверяем преимущество (нужно минимум 4 очка и разница 1)
-        if server.points >= 4 and (server.points - receiver.points) == 1:
+        # Преимущество (только при diff == 1 или -1 и минимум 4 очка у лидера)
+        if s >= 4 and diff == 1:
             return GameStatus.SERVER_ADVANTAGE
-        if receiver.points >= 4 and (receiver.points - server.points) == 1:
+        if r >= 4 and diff == -1:
             return GameStatus.RECEIVER_ADVANTAGE
 
-        # Деус: оба >= 3 и равны
-        if (
-            server.points >= 3
-            and receiver.points >= 3
-            and server.points == receiver.points
-        ):
+        # Деусе (равно и >= 3)
+        if s == r and s >= 3:
             return GameStatus.DEUCE
 
-        # Обычный счёт
         return GameStatus.REGULAR
 
 
