@@ -7,6 +7,11 @@ class TennisGame5:
         self.player2 = player2
 
     def score(self):
+        maximum = max(self.player1.points, self.player2.points)
+        if maximum > 4:
+            self.player1.points -= maximum - 4
+            self.player2.points -= maximum - 4
+
         while self.player1.points > 4 or self.player2.points > 4:
             self.player1.points -= 1
             self.player2.points -= 1
