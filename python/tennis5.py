@@ -12,10 +12,6 @@ class TennisGame5:
             self.player1.points -= max(maximum - 4, 0)
             self.player2.points -= max(maximum - 4, 0)
 
-        while self.player1.points > 4 or self.player2.points > 4:
-            self.player1.points -= 1
-            self.player2.points -= 1
-
         if self.player1.points < 3 and self.player2.points == 4:
             return "Win for player2"
         elif self.player1.points == 3 and self.player2.points == 4:
