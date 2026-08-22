@@ -18,48 +18,45 @@ class TennisGame5:
     def score(self):
         self.__normalize_points__()
 
-        if (
-            self.player1.points < DEUCE_THRESHOLD
-            and self.player2.points == WIN_THRESHOLD
-        ):
+        p1 = self.player1.points
+        p2 = self.player2.points
+
+        # Победа игрока 2
+        if p1 < DEUCE_THRESHOLD and p2 == WIN_THRESHOLD:
             return "Win for player2"
-        elif (
-            self.player1.points == DEUCE_THRESHOLD
-            and self.player2.points == WIN_THRESHOLD
-        ):
+
+        # Преимущество игрока 2
+        if p1 == DEUCE_THRESHOLD and p2 == WIN_THRESHOLD:
             return "Advantage player2"
-        elif (
-            self.player2.points < DEUCE_THRESHOLD
-            and self.player1.points == WIN_THRESHOLD
-        ):
+
+        # Победа игрока 1
+        if p2 < DEUCE_THRESHOLD and p1 == WIN_THRESHOLD:
             return "Win for player1"
-        elif (
-            self.player1.points == WIN_THRESHOLD
-            and self.player2.points == DEUCE_THRESHOLD
-        ):
+
+        # Преимущество игрока 1
+        if p1 == WIN_THRESHOLD and p2 == DEUCE_THRESHOLD:
             return "Advantage player1"
-        elif self.player1.points == 0:
-            player2_score = {0: "All", 1: "Fifteen", 2: "Thirty", 3: "Forty"}.get(
-                self.player2.points, ""
-            )
-            return "Love-" + player2_score
-        elif self.player1.points == 1:
-            player2_score = {0: "Love", 1: "All", 2: "Thirty", 3: "Forty"}.get(
-                self.player2.points, ""
-            )
-            return "Fifteen-" + player2_score
-        elif self.player1.points == 2:
-            player2_score = {0: "Love", 1: "Fifteen", 2: "All", 3: "Forty"}.get(
-                self.player2.points, ""
-            )
-            return "Thirty-" + player2_score
-        elif (
-            self.player1.points == DEUCE_THRESHOLD
-            and self.player2.points != DEUCE_THRESHOLD
-        ):
-            player2_score = {0: "Love", 1: "Fifteen", 2: "Thirty"}.get(
-                self.player2.points, ""
-            )
-            return "Forty-" + player2_score
-        elif self.player1.points == self.player2.points:
+
+        # Счёт для p1 = 0
+        if p1 == 0:
+            score_map = {0: "All", 1: "Fifteen", 2: "Thirty", 3: "Forty"}
+            return "Love-" + score_map.get(p2, "")
+
+        # Счёт для p1 = 1
+        if p1 == 1:
+            score_map = {0: "Love", 1: "All", 2: "Thirty", 3: "Forty"}
+            return "Fifteen-" + score_map.get(p2, "")
+
+        # Счёт для p1 = 2
+        if p1 == 2:
+            score_map = {0: "Love", 1: "Fifteen", 2: "All", 3: "Forty"}
+            return "Thirty-" + score_map.get(p2, "")
+
+        # Счёт для p1 = 3 (Forty) когда p2 не 3
+        if p1 == DEUCE_THRESHOLD and p2 != DEUCE_THRESHOLD:
+            score_map = {0: "Love", 1: "Fifteen", 2: "Thirty"}
+            return "Forty-" + score_map.get(p2, "")
+
+        # Deuce
+        if p1 == p2:
             return "Deuce"
